@@ -1,0 +1,70 @@
+@prefix : <http://example.org/sis-planner/request/stress#> .
+@prefix t: <http://example.org/sis-planner/types#> .
+@prefix ex: <http://example.org/sis-planner/production#> .
+@prefix SiS: <http://www.semanticweb.org/reif/ontologies/SiS#> .
+@prefix VDI3633: <http://www.semanticweb.org/reif/ontologies/VDI3633#> .
+@prefix DINEN61360: <http://www.w3id.org/hsu-aut/DINEN61360#> .
+@prefix CSS: <http://www.w3id.org/hsu-aut/css#> .
+@prefix CaSk: <http://www.w3id.org/hsu-aut/cask#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Request: "Which stresses occur in the bracket?"
+# The request describes the simulation that is wanted, with the same SiS structure as an
+# existing simulation, but with a required instead of a provided capability:
+#   - SiS:isSimulationFor         process for which simulations may be used (process filter)
+#   - VDI3633:hasInputData        data that is available
+#   - VDI3633:hasSimulationResultData  data that is wanted
+#   - SiS:RequiredQuality         required quality (type description, value, logic interpretation);
+#                                 every SiS:RequiredQuality in the request file is taken into account
+
+:Simulation a VDI3633:Simulation ;
+    rdfs:label "Stresses in the bracket" ;
+    SiS:isSimulationFor ex:BracketDesign ;
+    VDI3633:comprisesExperiment :Experiment .
+
+:Experiment a VDI3633:SimulationExperiment ;
+    VDI3633:hasSimulationRun :Run .
+
+:Run a VDI3633:SimulationRun ;
+    CSS:requiresCapability :RequiredCapability ;
+    VDI3633:hasInputData :Geometry, :Material ;
+    VDI3633:hasSimulationResultData :Stress .
+
+:RequiredCapability a CaSk:RequiredCapability .
+
+:Geometry a VDI3633:InputData ; SiS:hasDataElement :Geometry_DE .
+:Geometry_DE a DINEN61360:Data_Element ; DINEN61360:has_Type_Description t:Geometry_TD .
+
+:Material a VDI3633:InputData ; SiS:hasDataElement :Material_DE .
+:Material_DE a DINEN61360:Data_Element ; DINEN61360:has_Type_Description t:Material_TD .
+
+:Stress a VDI3633:SimulationResultData ; SiS:hasDataElement :Stress_DE .
+:Stress_DE a DINEN61360:Data_Element ; DINEN61360:has_Type_Description t:Stress_TD .
+
+:RQ_LeadTime a SiS:RequiredQuality ; SiS:hasDataElement :RQ_LeadTime_DE .
+:RQ_LeadTime_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:LeadTime_TD ;
+    DINEN61360:has_Instance_Description :RQ_LeadTime_ID .
+:RQ_LeadTime_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.5 ; DINEN61360:Logic_Interpretation ">=" ; DINEN61360:Expression_Goal "Requirement" .
+
+:RQ_SimTime a SiS:RequiredQuality ; SiS:hasDataElement :RQ_SimTime_DE .
+:RQ_SimTime_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:SimTime_TD ;
+    DINEN61360:has_Instance_Description :RQ_SimTime_ID .
+:RQ_SimTime_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.5 ; DINEN61360:Logic_Interpretation ">=" ; DINEN61360:Expression_Goal "Requirement" .
+
+:RQ_ResultAccuracy a SiS:RequiredQuality ; SiS:hasDataElement :RQ_ResultAccuracy_DE .
+:RQ_ResultAccuracy_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:ResultAccuracy_TD ;
+    DINEN61360:has_Instance_Description :RQ_ResultAccuracy_ID .
+:RQ_ResultAccuracy_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.55 ; DINEN61360:Logic_Interpretation ">=" ; DINEN61360:Expression_Goal "Requirement" .
+
+:RQ_TRL a SiS:RequiredQuality ; SiS:hasDataElement :RQ_TRL_DE .
+:RQ_TRL_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:TRL_TD ;
+    DINEN61360:has_Instance_Description :RQ_TRL_ID .
+:RQ_TRL_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.6 ; DINEN61360:Logic_Interpretation ">=" ; DINEN61360:Expression_Goal "Requirement" .

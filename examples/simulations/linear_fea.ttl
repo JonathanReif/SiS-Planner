@@ -1,0 +1,86 @@
+@prefix : <http://example.org/sis-planner/linear_fea#> .
+@prefix t: <http://example.org/sis-planner/types#> .
+@prefix ex: <http://example.org/sis-planner/production#> .
+@prefix SiS: <http://www.semanticweb.org/reif/ontologies/SiS#> .
+@prefix VDI3633: <http://www.semanticweb.org/reif/ontologies/VDI3633#> .
+@prefix DINEN61360: <http://www.w3id.org/hsu-aut/DINEN61360#> .
+@prefix CSS: <http://www.w3id.org/hsu-aut/css#> .
+@prefix CaSk: <http://www.w3id.org/hsu-aut/cask#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Fictional example: linear-elastic finite element analysis.
+# The accuracy of the mesh influences the result accuracy (influence score 0.8).
+
+:LinearFEA a VDI3633:Simulation ;
+    rdfs:label "Linear-elastic FE analysis" ;
+    SiS:isSimulationFor ex:BracketDesign ;
+    VDI3633:comprisesExperiment :Experiment .
+
+:Experiment a VDI3633:SimulationExperiment ;
+    VDI3633:hasSimulationRun :Run .
+
+:Run a VDI3633:SimulationRun ;
+    CSS:requiresCapability :LinearFEACapability ;
+    VDI3633:isExecutedWith :Environment ;
+    VDI3633:hasInputData :Mesh, :Material ;
+    VDI3633:hasSimulationResultData :Stress .
+
+:Environment a VDI3633:SimulationEnvironment ;
+    CSS:providesCapability :LinearFEACapability ;
+    SiS:hasQualityCriteria :LeadTime, :SimTime, :ResultAccuracy, :TRL .
+
+:LinearFEACapability a CaSk:ProvidedCapability .
+
+:Mesh a VDI3633:InputData ;
+    SiS:hasDataElement :Mesh_DE ;
+    SiS:hasInfluence :MeshInfluenceOnAccuracy .
+:Mesh_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:Mesh_TD .
+
+:MeshInfluenceOnAccuracy a SiS:InfluenceScore ;
+    SiS:isInfluenceFor :Run ;
+    SiS:hasInfluenceOn :ResultAccuracy ;
+    SiS:hasDataElement :MeshInfluenceOnAccuracy_DE .
+:MeshInfluenceOnAccuracy_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:InfluenceScore_TD ;
+    DINEN61360:has_Instance_Description :MeshInfluenceOnAccuracy_ID .
+:MeshInfluenceOnAccuracy_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.8 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Actual_Value" .
+
+:Material a VDI3633:InputData ;
+    SiS:hasDataElement :Material_DE .
+:Material_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:Material_TD .
+
+:Stress a VDI3633:SimulationResultData ;
+    SiS:hasDataElement :Stress_DE .
+:Stress_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:Stress_TD .
+
+:LeadTime a SiS:QualityCriteria ; SiS:hasDataElement :LeadTime_DE .
+:LeadTime_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:LeadTime_TD ;
+    DINEN61360:has_Instance_Description :LeadTime_ID .
+:LeadTime_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.8 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .
+
+:SimTime a SiS:QualityCriteria ; SiS:hasDataElement :SimTime_DE .
+:SimTime_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:SimTime_TD ;
+    DINEN61360:has_Instance_Description :SimTime_ID .
+:SimTime_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.9 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .
+
+:ResultAccuracy a SiS:QualityCriteria ; SiS:hasDataElement :ResultAccuracy_DE .
+:ResultAccuracy_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:ResultAccuracy_TD ;
+    DINEN61360:has_Instance_Description :ResultAccuracy_ID .
+:ResultAccuracy_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.6 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .
+
+:TRL a SiS:QualityCriteria ; SiS:hasDataElement :TRL_DE .
+:TRL_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:TRL_TD ;
+    DINEN61360:has_Instance_Description :TRL_ID .
+:TRL_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.9 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .

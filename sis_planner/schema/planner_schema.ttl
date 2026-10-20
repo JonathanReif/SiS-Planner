@@ -1,0 +1,120 @@
+# Class hierarchy required by the queries of the planning core.
+# Subclass axioms taken from the imported ontologies (CSS, CaSk, DINEN61360, VDI3682, OpenMath, VDI3633, SiS 1.1).
+
+@prefix CSS: <http://www.w3id.org/hsu-aut/css#> .
+@prefix CaSk: <http://www.w3id.org/hsu-aut/cask#> .
+@prefix DINEN61360: <http://www.w3id.org/hsu-aut/DINEN61360#> .
+@prefix SiS: <http://www.semanticweb.org/reif/ontologies/SiS#> .
+@prefix VDI3633: <http://www.semanticweb.org/reif/ontologies/VDI3633#> .
+@prefix VDI3682: <http://www.w3id.org/hsu-aut/VDI3682#> .
+@prefix math: <http://openmath.org/vocab/math#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+math:Application rdfs:subClassOf math:Compound .
+
+math:Attribution rdfs:subClassOf math:Compound .
+
+math:AttributionList rdfs:subClassOf rdf:List .
+
+math:AttributionPair rdfs:subClassOf owl:Thing .
+
+math:Binding rdfs:subClassOf math:Compound .
+
+math:Error rdfs:subClassOf math:Compound .
+
+math:Foreign rdfs:subClassOf math:Object .
+
+math:Literal rdfs:subClassOf math:Object .
+
+math:ObjectList rdfs:subClassOf rdf:List .
+
+math:Reference rdfs:subClassOf math:Object .
+
+math:Symbol rdfs:subClassOf math:Object .
+
+math:Variable rdfs:subClassOf math:Object .
+
+math:VariableList rdfs:subClassOf rdf:List .
+
+SiS:InfluenceScore rdfs:subClassOf SiS:Influence .
+
+SiS:Interdependency rdfs:subClassOf SiS:Influence .
+
+SiS:QualityCriteria rdfs:subClassOf CSS:Property .
+
+SiS:RequiredQuality rdfs:subClassOf VDI3633:Data .
+
+SiS:SensitivityIndex rdfs:subClassOf SiS:Influence .
+
+VDI3633:SimulationEnvironment rdfs:subClassOf CSS:Resource .
+
+VDI3633:SimulationRun rdfs:subClassOf CSS:Process .
+
+DINEN61360:Array rdfs:subClassOf DINEN61360:Complex_Data_Type .
+
+DINEN61360:Array_Member rdfs:subClassOf DINEN61360:Complex_Data_Type_Member .
+
+DINEN61360:Bag rdfs:subClassOf DINEN61360:Complex_Data_Type .
+
+DINEN61360:Bag_Member rdfs:subClassOf DINEN61360:Complex_Data_Type_Member .
+
+DINEN61360:Boolean rdfs:subClassOf DINEN61360:Simple_Data_Type .
+
+DINEN61360:Data_Element rdfs:subClassOf CSS:Property .
+
+DINEN61360:Integer rdfs:subClassOf DINEN61360:Simple_Data_Type .
+
+DINEN61360:List rdfs:subClassOf DINEN61360:Complex_Data_Type .
+
+DINEN61360:List_Member rdfs:subClassOf DINEN61360:Complex_Data_Type_Member .
+
+DINEN61360:Real rdfs:subClassOf DINEN61360:Simple_Data_Type .
+
+DINEN61360:Set rdfs:subClassOf DINEN61360:Complex_Data_Type .
+
+DINEN61360:Set_Member rdfs:subClassOf DINEN61360:Complex_Data_Type_Member .
+
+DINEN61360:String rdfs:subClassOf DINEN61360:Simple_Data_Type .
+
+VDI3682:Characteristic rdfs:subClassOf VDI3682:Attribute .
+
+VDI3682:Energy rdfs:subClassOf VDI3682:State .
+
+VDI3682:Identification rdfs:subClassOf VDI3682:Attribute .
+
+VDI3682:Product rdfs:subClassOf VDI3682:State .
+
+VDI3682:TechnicalResource rdfs:subClassOf CSS:Resource .
+
+CaSk:GetOutputs rdfs:subClassOf CaSk:StatelessMethod .
+
+CaSk:ProvidedCapability rdfs:subClassOf CSS:Capability .
+
+CaSk:RequiredCapability rdfs:subClassOf CSS:Capability .
+
+CaSk:SetParameters rdfs:subClassOf CaSk:StatelessMethod .
+
+CaSk:SkillCommand rdfs:subClassOf CSS:SkillTrigger .
+
+CaSk:StatefulMethod rdfs:subClassOf CaSk:SkillMethod .
+
+VDI3633:Data rdfs:subClassOf VDI3682:Information .
+
+VDI3682:Information rdfs:subClassOf VDI3682:State .
+
+CaSk:SkillMethod rdfs:subClassOf CSS:SkillTrigger .
+
+CaSk:StatelessMethod rdfs:subClassOf CaSk:SkillMethod .
+
+math:Compound rdfs:subClassOf math:Object .
+
+DINEN61360:Complex_Data_Type rdfs:subClassOf DINEN61360:Data_Type .
+
+DINEN61360:Complex_Data_Type_Member rdfs:subClassOf DINEN61360:Data_Type .
+
+DINEN61360:Simple_Data_Type rdfs:subClassOf DINEN61360:Data_Type .
+
+math:Object rdfs:subClassOf owl:Thing .
+
