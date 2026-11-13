@@ -27,21 +27,46 @@
 
 :Environment a VDI3633:SimulationEnvironment ;
     CSS:providesCapability :ThermalLumpedCapability ;
+    VDI3633:hasModel :FMU ;
     SiS:hasQualityCriteria :LeadTime, :SimTime, :ResultAccuracy, :TRL .
 
 :ThermalLumpedCapability a CaSk:ProvidedCapability .
 
+# Executable model (FMU), described with DINEN61360 data elements
+:FMU a VDI3633:Model ;
+    DINEN61360:has_Data_Element :FMU_ModelName_DE, :FMU_Guid_DE, :FMU_FileName_DE, :FMU_Path_DE .
+:FMU_ModelName_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUModelName_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "ThermalLumped" ] .
+:FMU_Guid_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUGuid_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "{8b1e4d7a-2c9f-4a63-b5e0-7f3d1a6c9e28}" ] .
+:FMU_FileName_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUFileName_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "ThermalLumped.fmu" ] .
+:FMU_Path_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUPath_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "fmus/ThermalLumped.fmu" ] .
+
+# rdfs:label of the data = variable name in the FMU
 :Geometry a VDI3633:InputData ;
+    rdfs:label "geometry" ;
     SiS:hasDataElement :Geometry_DE .
 :Geometry_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:Geometry_TD .
 
 :CureCycle a VDI3633:InputData ;
+    rdfs:label "cureCycle" ;
     SiS:hasDataElement :CureCycle_DE .
 :CureCycle_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:CureCycle_TD .
 
 :TemperatureField a VDI3633:SimulationResultData ;
+    rdfs:label "T_part" ;
     SiS:hasDataElement :TemperatureField_DE .
 :TemperatureField_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:TemperatureField_TD .

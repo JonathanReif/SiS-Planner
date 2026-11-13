@@ -31,6 +31,10 @@ def plan(
     user: Optional[str] = typer.Option(None, help="User for the SPARQL endpoint."),
     password: Optional[str] = typer.Option(None, help="Password for the SPARQL endpoint."),
     json_out: Optional[Path] = typer.Option(None, "--json", help="Write the complete result as JSON."),
+    workflow_out: Optional[str] = typer.Option(
+        None, "--workflow-json",
+        help="Write the ranked sequences as workflow (steps, FMU, parameters) as JSON to FILE, "
+             "or to stdout with '-' (the report then goes to stderr)."),
     details: bool = typer.Option(False, "--details", "-d", help="Show the evaluation per quality criterion."),
     top: Optional[int] = typer.Option(None, help="Show only the best N sequences."),
     max_happenings: int = typer.Option(20, help="Upper bound for the number of planning steps."),
@@ -55,13 +59,22 @@ def plan(
     except TranslationError as exc:
         typer.echo(f"Error in the descriptions: {exc}", err=True)
         raise typer.Exit(2)
-    typer.echo(render(outcome, details, top))
+    to_stdout = workflow_out == "-"
+    typer.echo(render(outcome, details, top), err=to_stdout)
     if json_out:
         json_out.write_text(json.dumps(outcome.to_json(), indent=2, ensure_ascii=False), encoding="utf-8")
-        typer.echo(f"\nJSON written to {json_out}")
+        typer.echo(f"\nJSON written to {json_out}", err=to_stdout)
+    if workflow_out:
+        from .workflow import workflows_json
+        text = json.dumps(workflows_json(outcome, top), indent=2, ensure_ascii=False)
+        if to_stdout:
+            typer.echo(text)
+        else:
+            Path(workflow_out).write_text(text, encoding="utf-8")
+            typer.echo(f"\nWorkflow JSON written to {workflow_out}")
     if save_view:
         outcome.view.serialize(save_view, format="turtle")
-        typer.echo(f"Planning view written to {save_view}")
+        typer.echo(f"Planning view written to {save_view}", err=to_stdout)
 
 
 @app.command()

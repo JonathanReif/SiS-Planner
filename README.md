@@ -36,8 +36,39 @@ Rank      Score  Meets  Sequence (in execution order)
 The simulations are read from Turtle files (`--kb`, file or directory) or from a SPARQL endpoint
 (`--endpoint http://localhost:7200/repositories/<repo>`, read only). Further options:
 `--details` (evaluation per quality criterion), `--json FILE` (complete result),
-`--no-process-filter`, `sis-planner check` (request and considered simulations without planning)
-and `sis-planner plan --help`. The example data in `examples/` is fictional.
+`--workflow-json FILE` (executable workflow, see below), `--no-process-filter`, `sis-planner check`
+(request and considered simulations without planning) and `sis-planner plan --help`. The example
+data in `examples/` is fictional.
+
+## Workflow export (FMU)
+
+`--workflow-json FILE` writes the ranked sequences (best first, limited by `--top`) as workflow
+description; with `--workflow-json -` the JSON goes to stdout and the report to stderr. Every step
+contains the IRIs of simulation, simulation run, environment and capability, the FMU (model name,
+GUID, file name, path) and the input and output parameters. Every input names its source: the
+request or the output parameter of a preceding step together with that FMU's GUID.
+
+```bash
+sis-planner plan examples/requests/cure_request.ttl --kb examples/simulations --top 1 --workflow-json -
+```
+
+The FMU is described with existing terms of VDI 3633 and DIN EN 61360 only (see
+`examples/simulations/thermal_fe.ttl`):
+
+```turtle
+:Environment VDI3633:hasModel :FMU .
+:FMU a VDI3633:Model ;
+    DINEN61360:has_Data_Element :FMU_Guid_DE .            # likewise model name, file name, path
+:FMU_Guid_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUGuid_TD ;        # FMUModelName_TD, FMUFileName_TD, FMUPath_TD
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "{3f2a8c1e-...}" ] .
+:TemperatureField a VDI3633:SimulationResultData ;
+    rdfs:label "temperatureField" .                       # variable name in the FMU
+```
+
+The type descriptions are matched by their local name (any namespace). Without `VDI3633:hasModel`
+the field `fmu` is `null`; without `rdfs:label` the local name of the datum is used as parameter name.
 
 ## Request
 

@@ -37,11 +37,34 @@
 
 :Environment a VDI3633:SimulationEnvironment ;
     CSS:providesCapability :CureKineticsCapability ;
+    VDI3633:hasModel :FMU ;
     SiS:hasQualityCriteria :LeadTime, :SimTime, :ResultAccuracy, :TRL .
 
 :CureKineticsCapability a CaSk:ProvidedCapability .
 
+# Executable model (FMU), described with DINEN61360 data elements
+:FMU a VDI3633:Model ;
+    DINEN61360:has_Data_Element :FMU_ModelName_DE, :FMU_Guid_DE, :FMU_FileName_DE, :FMU_Path_DE .
+:FMU_ModelName_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUModelName_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "CureKinetics" ] .
+:FMU_Guid_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUGuid_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "{c47d0f92-5a1b-4e8c-a3f6-91b2e7d05c4a}" ] .
+:FMU_FileName_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUFileName_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "CureKinetics.fmu" ] .
+:FMU_Path_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUPath_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "fmus/CureKinetics.fmu" ] .
+
+# rdfs:label of the data = variable name in the FMU
 :TemperatureField a VDI3633:InputData ;
+    rdfs:label "T_in" ;
     SiS:hasDataElement :TemperatureField_DE ;
     SiS:hasInfluence :TemperatureInfluenceOnAccuracy .
 :TemperatureField_DE a DINEN61360:Data_Element ;
@@ -72,11 +95,13 @@
 :OneForDeficit a math:Literal ; math:value 1.0 .
 
 :ResinModel a VDI3633:InputData ;
+    rdfs:label "resinModel" ;
     SiS:hasDataElement :ResinModel_DE .
 :ResinModel_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:ResinModel_TD .
 
 :DegreeOfCure a VDI3633:SimulationResultData ;
+    rdfs:label "alpha" ;
     SiS:hasDataElement :DegreeOfCure_DE .
 :DegreeOfCure_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:DegreeOfCure_TD .

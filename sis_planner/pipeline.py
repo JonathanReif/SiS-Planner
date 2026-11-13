@@ -4,7 +4,7 @@ from __future__ import annotations
 import time
 from dataclasses import asdict, dataclass
 from importlib import resources
-from typing import List
+from typing import List, Optional
 
 from rdflib import Graph
 
@@ -30,6 +30,7 @@ class PlanningOutcome:
     view: Graph
     seconds: float
     parameters: ScoringParameters = DEFAULT_PARAMETERS
+    source: Optional[Graph] = None   # knowledge base + request (for the workflow export)
 
     def sequences(self) -> List[List[str]]:
         return [[n.clean_iri for n in plan_nodes(e["plan"])] for e in self.ranked]
@@ -74,4 +75,4 @@ def plan(knowledge: Graph, request_graph: Graph, max_happenings: int = 20, use_p
     knowledge_q = QualityKnowledge(working, info.auxiliary, info.variable_types)
     ranked = evaluate_and_rank(plans, req.required_quality, knowledge_q, parameters) if plans else []
     return PlanningOutcome(req, sims, result.get("resultType", "unknown"), plans, ranked, working,
-                           time.time() - t0, parameters)
+                           time.time() - t0, parameters, knowledge + request_graph)

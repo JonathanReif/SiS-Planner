@@ -27,21 +27,46 @@
 
 :Environment a VDI3633:SimulationEnvironment ;
     CSS:providesCapability :ThermalFECapability ;
+    VDI3633:hasModel :FMU ;
     SiS:hasQualityCriteria :LeadTime, :SimTime, :ResultAccuracy, :TRL .
 
 :ThermalFECapability a CaSk:ProvidedCapability .
 
+# Executable model (FMU), described with DINEN61360 data elements
+:FMU a VDI3633:Model ;
+    DINEN61360:has_Data_Element :FMU_ModelName_DE, :FMU_Guid_DE, :FMU_FileName_DE, :FMU_Path_DE .
+:FMU_ModelName_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUModelName_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "ThermalFE" ] .
+:FMU_Guid_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUGuid_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "{3f2a8c1e-6b4d-4e9a-9c71-0d5e2b8a4f13}" ] .
+:FMU_FileName_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUFileName_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "ThermalFE.fmu" ] .
+:FMU_Path_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:FMUPath_TD ;
+    DINEN61360:has_Instance_Description [ a DINEN61360:Instance_Description, DINEN61360:String ;
+                                          DINEN61360:Value "fmus/ThermalFE.fmu" ] .
+
+# rdfs:label of the data = variable name in the FMU
 :Geometry a VDI3633:InputData ;
+    rdfs:label "geometry" ;
     SiS:hasDataElement :Geometry_DE .
 :Geometry_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:Geometry_TD .
 
 :CureCycle a VDI3633:InputData ;
+    rdfs:label "cureCycle" ;
     SiS:hasDataElement :CureCycle_DE .
 :CureCycle_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:CureCycle_TD .
 
 :TemperatureField a VDI3633:SimulationResultData ;
+    rdfs:label "temperatureField" ;
     SiS:hasDataElement :TemperatureField_DE .
 :TemperatureField_DE a DINEN61360:Data_Element ;
     DINEN61360:has_Type_Description t:TemperatureField_TD .
