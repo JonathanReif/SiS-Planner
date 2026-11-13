@@ -1,0 +1,111 @@
+@prefix : <http://example.org/sis-planner/cure_kinetics#> .
+@prefix t: <http://example.org/sis-planner/types#> .
+@prefix ex: <http://example.org/sis-planner/production#> .
+@prefix SiS: <http://www.semanticweb.org/reif/ontologies/SiS#> .
+@prefix VDI3633: <http://www.semanticweb.org/reif/ontologies/VDI3633#> .
+@prefix DINEN61360: <http://www.w3id.org/hsu-aut/DINEN61360#> .
+@prefix CSS: <http://www.w3id.org/hsu-aut/css#> .
+@prefix CaSk: <http://www.w3id.org/hsu-aut/cask#> .
+@prefix math: <http://openmath.org/vocab/math#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Fictional example: cure kinetics model that computes the degree of cure from the temperature field.
+#
+# The influence of the temperature field on the result accuracy is modelled as SiS:Interdependency,
+# i.e. as an OpenMath expression that is evaluated with the propagated quality q_T of the temperature
+# field at planning time:
+#
+#     f = min(1, 2 * (1 - q_T))
+#
+# Small deficits of the temperature field are attenuated (q_T = 0.7 gives f = 0.6), large deficits
+# take full effect (q_T <= 0.5 gives f = 1). The variable q_T is the instance description
+# :TemperatureField_ID of the input datum.
+
+:CureKinetics a VDI3633:Simulation ;
+    rdfs:label "Cure kinetics model" ;
+    SiS:isSimulationFor ex:CureCycleDesign ;
+    VDI3633:comprisesExperiment :Experiment .
+
+:Experiment a VDI3633:SimulationExperiment ;
+    VDI3633:hasSimulationRun :Run .
+
+:Run a VDI3633:SimulationRun ;
+    CSS:requiresCapability :CureKineticsCapability ;
+    VDI3633:isExecutedWith :Environment ;
+    VDI3633:hasInputData :TemperatureField, :ResinModel ;
+    VDI3633:hasSimulationResultData :DegreeOfCure .
+
+:Environment a VDI3633:SimulationEnvironment ;
+    CSS:providesCapability :CureKineticsCapability ;
+    SiS:hasQualityCriteria :LeadTime, :SimTime, :ResultAccuracy, :TRL .
+
+:CureKineticsCapability a CaSk:ProvidedCapability .
+
+:TemperatureField a VDI3633:InputData ;
+    SiS:hasDataElement :TemperatureField_DE ;
+    SiS:hasInfluence :TemperatureInfluenceOnAccuracy .
+:TemperatureField_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:TemperatureField_TD ;
+    DINEN61360:has_Instance_Description :TemperatureField_ID .
+:TemperatureField_ID a DINEN61360:Instance_Description .
+
+# Interdependency: influence of the temperature field on the result accuracy, f = min(1, 2 * (1 - q_T))
+:TemperatureInfluenceOnAccuracy a SiS:Interdependency ;
+    SiS:isInfluenceFor :Run ;
+    SiS:hasInfluenceOn :ResultAccuracy ;
+    SiS:hasDataElement :TemperatureInfluenceOnAccuracy_DE .
+:TemperatureInfluenceOnAccuracy_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:InfluenceScore_TD ;
+    CSS:isRestrictedBy :InfluenceExpression .
+
+:InfluenceExpression a math:Application ;
+    math:operator <http://www.openmath.org/cd/minmax1#min> ;
+    math:arguments ( :One :ScaledDeficit ) .
+:ScaledDeficit a math:Application ;
+    math:operator <http://www.openmath.org/cd/arith1#times> ;
+    math:arguments ( :Two :Deficit ) .
+:Deficit a math:Application ;
+    math:operator <http://www.openmath.org/cd/arith1#minus> ;
+    math:arguments ( :OneForDeficit :TemperatureField_ID ) .
+:One a math:Literal ; math:value 1.0 .
+:Two a math:Literal ; math:value 2.0 .
+:OneForDeficit a math:Literal ; math:value 1.0 .
+
+:ResinModel a VDI3633:InputData ;
+    SiS:hasDataElement :ResinModel_DE .
+:ResinModel_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:ResinModel_TD .
+
+:DegreeOfCure a VDI3633:SimulationResultData ;
+    SiS:hasDataElement :DegreeOfCure_DE .
+:DegreeOfCure_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:DegreeOfCure_TD .
+
+# Quality criteria (normalised to [0, 1], higher is better)
+:LeadTime a SiS:QualityCriteria ; SiS:hasDataElement :LeadTime_DE .
+:LeadTime_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:LeadTime_TD ;
+    DINEN61360:has_Instance_Description :LeadTime_ID .
+:LeadTime_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.9 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .
+
+:SimTime a SiS:QualityCriteria ; SiS:hasDataElement :SimTime_DE .
+:SimTime_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:SimTime_TD ;
+    DINEN61360:has_Instance_Description :SimTime_ID .
+:SimTime_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.9 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .
+
+:ResultAccuracy a SiS:QualityCriteria ; SiS:hasDataElement :ResultAccuracy_DE .
+:ResultAccuracy_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:ResultAccuracy_TD ;
+    DINEN61360:has_Instance_Description :ResultAccuracy_ID .
+:ResultAccuracy_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.9 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .
+
+:TRL a SiS:QualityCriteria ; SiS:hasDataElement :TRL_DE .
+:TRL_DE a DINEN61360:Data_Element ;
+    DINEN61360:has_Type_Description t:TRL_TD ;
+    DINEN61360:has_Instance_Description :TRL_ID .
+:TRL_ID a DINEN61360:Instance_Description, DINEN61360:Real ;
+    DINEN61360:Value 0.8 ; DINEN61360:Logic_Interpretation "=" ; DINEN61360:Expression_Goal "Assurance" .
